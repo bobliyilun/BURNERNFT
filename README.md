@@ -5,8 +5,8 @@ This Dapp starts from a seed dapp by Fireship: https://www.youtube.com/channel/U
 - See the seed version in action in the [Web3 NFT Tutorial](https://youtu.be/meTpMP0J5E8) on YouTube.
 - Follow the full [Web3 Tutorial](https://fireship.io/lessons/web3-solidity-hardhat-react-tutorial) on Fireship.
 
-The changes Made:
-On the smart contract:
+The changes Made:\\
+On the smart contract:\\
 Made the NFT burnable
 
 Made the NFT transferable 
