@@ -5,13 +5,16 @@ This Dapp starts from a seed dapp by Fireship: https://www.youtube.com/channel/U
 - See the seed version in action in the [Web3 NFT Tutorial](https://youtu.be/meTpMP0J5E8) on YouTube.
 - Follow the full [Web3 Tutorial](https://fireship.io/lessons/web3-solidity-hardhat-react-tutorial) on Fireship.
 
-The changes Made:\\
-On the smart contract:\\
+The changes Made:
+
+On the smart contract:
+
 Made the NFT burnable
 
 Made the NFT transferable 
 
 On React components:
+
 Allow individual users to mint their own burner phone numbers to their own metamask addresses.
 The original version mint the NFT at where the contract is deployed. 
 
@@ -24,6 +27,7 @@ I made sure that the current metamask account holders connected to the dapp can 
 All numbers are not visible, not burnale, and not transferable by no one but their owner.
 
 On pure frontend and NFT generation:
+
 Original Dapp was designed for pictures. Needed to conver text for this application. 
 
 Fireship did not include how his NFT was generated. However, I made my own burner phone number generator in python.
