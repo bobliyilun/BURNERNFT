@@ -8,20 +8,26 @@ This Dapp starts from a seed dapp by Fireship.
 The changes Made:
 On the smart contract:
 Made the NFT burnable
+
 Made the NFT transferable 
 
-On the Frontend:
+On React components:
 Allow individual users to mint their own burner phone numbers to their own metamask addresses.
 The original version mint the NFT at where the contract is deployed. 
+
 Allows the users to export all the numbers they own and up and running (not burnt) to a text file.
 This is done by fetching each IPFS URL. 
 
 Enforce a privacy filter. Due to the simplicity of the original frontend, all users share the smae web page when minting NFTs.
-This is not eaxctly secure as one may not want others to see their 
+This is not eaxctly secure as one may not want others to see their burner phone numbers. 
+I made sure that the current metamask account holders connected to the dapp can only see the numbers generated on their own accounts.
+All numbers are not visible, not burnale, and not transferable by no one but their owner.
 
+On pure frontend and NFT generation:
+Original Dapp was designed for pictures. Needed to conver text for this application. 
 
-The demo contains a basic web3 app and smart contract for minting NFTs.
-
+Fireship did not include how his NFT was generated. However, I made my own burner phone number generator in python.
+It generates phone numbers with Toronto area codes, and it ensures uniqueness in the generations as well. 
 
 
 ## Usage
