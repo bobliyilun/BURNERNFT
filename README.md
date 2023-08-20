@@ -40,6 +40,7 @@ It generates phone numbers with Toronto area codes, and it ensures uniqueness in
 git clone <this-repo>
 cd into it
 npm install
+npm install --save-dev @nomiclabs/hardhat-waffle ethereum-waffle chai @nomiclabs/hardhat-ethers ethers @openzeppelin/contracts
 
 # terminal 1
 npx hardhat node
