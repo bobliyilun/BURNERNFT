@@ -48,3 +48,6 @@ npm run dev
 ```
 
 Update the deployed contract address in `compoonents/Home.js` 
+If there is any mishap during the installation process, please be patient and do you best to figure it out.
+Everything was set up smoothly after I ran "npm install". Although, I seem to remember installing waffle separately.
+If there are any questions, please reach out to me. 
