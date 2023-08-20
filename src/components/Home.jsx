@@ -26,24 +26,78 @@ function Home() {
 
   const getCount = async () => {
     const count = await contract.count();
-    console.log(parseInt(count));
+    console.log("minted", parseInt(count));
     setTotalMinted(parseInt(count));
   };
 
-  // const [totalBurnt, setTotalBurnt] = useState(0);
-  // useEffect(() => {
-  //   getBurntCount();
-  // }, []);
+  const [totalBurnt, setTotalBurnt] = useState(0);
+  useEffect(() => {
+    getBurntCount();
+  }, []);
 
-  // const getBurntCount = async () => {
-  //   const count = await contract.count_burned();
-  //   console.log(parseInt(count));
-  //   setTotalBurnt(parseInt(count));
-  // };
+  const getBurntCount = async () => {
+    const count_burnt = await contract.count_burned();
+    console.log("burnt", parseInt(count_burnt));
+    setTotalBurnt(parseInt(count_burnt));
+  };
 
 
-  const uri_prefix = `https://gateway.pinata.cloud/ipfs/Qmdh2FRkhHKMnxSkg3MqLWeZFz1XZbZY795gm4CRwoswLc/`;
-  const urls = Array(totalMinted).fill(0).map((_, idx) => (uri_prefix + `${idx}` + `.txt`));
+  // const uri_prefix = `https://gateway.pinata.cloud/ipfs/Qmdh2FRkhHKMnxSkg3MqLWeZFz1XZbZY795gm4CRwoswLc/`;
+  const [[wallet_curr], setwallet_curr] = useState('');
+  useEffect(() => { 
+    window.ethereum.on('accountsChanged', getCurrentWallet);
+    getCurrentWallet(); 
+    return () => {
+      window.ethereum.removeListener('accountsChanged', updateCurrentAccount);
+    };
+  }, []); //, [[wallet_curr]]
+
+  const getCurrentWallet = async () => {
+    const curr_signer = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    setwallet_curr(curr_signer);
+  };
+
+  const [urls, seturls] = useState([]);
+  const [ownership, setownership] = useState([]);
+  useEffect(() => {
+    async function getalltokens() {
+      const tokens = Array(totalMinted).fill(0).map(async (_, idx) => idx);
+      const filter_burnt = await Promise.all(tokens.map(async item => {
+        const burnt = await contract.isTokenBurned(item);
+        return burnt ? null : item;
+      }));
+      const unburnt_tokens = filter_burnt.filter(item => item !== null);
+      const filter_owner = await Promise.all(unburnt_tokens.map(async item => {
+        const actual_owner = await contract.ownerOf(item);
+        const shouldInclude = (actual_owner.toLowerCase() === wallet_curr.toLowerCase());
+        return shouldInclude ? item : null;
+      }));
+      const owntokens = filter_owner.filter(item => item !== null)
+
+      const results = await Promise.all(owntokens.map(async item => {
+        const actual_link = await contract.tokenURI(item);
+        return actual_link;
+      }));
+
+      const slice_urls = results.map((value, _) => value.slice(7));
+      seturls(slice_urls);
+
+      // const ownerships = Array(totalMinted).fill(0).map(async (_, idx) => idx);
+      const filter_invalid = await Promise.all(tokens.map(async item => {
+        const burnt = await contract.isTokenBurned(item);
+        let actual_owner = '0';
+        if (!burnt) {
+          actual_owner = await contract.ownerOf(item);
+        }
+        const owned = (actual_owner.toLowerCase() === wallet_curr.toLowerCase());
+        return owned;
+      }));
+      setownership(filter_invalid)
+
+    }
+    getalltokens();
+  }, [totalBurnt, totalMinted, wallet_curr]);
+
 
   const [fetchedDataList, setFetchedDataList] = useState([]);
   useEffect(() => {
@@ -62,7 +116,7 @@ function Home() {
     }
 
     fetchDataList();
-  }, [totalMinted]);
+  }, [urls]);
 
 
   //<DownLoadMinted tokenId={totalMinted} storagelocation={'Qmdh2FRkhHKMnxSkg3MqLWeZFz1XZbZY795gm4CRwoswLc'} />
@@ -78,22 +132,20 @@ function Home() {
             .fill(0)
             .map((_, i) => (
               <div key={i} className="col-sm">
-                <NFTImage tokenId={i} getCount={getCount} />
+                <NFTImage tokenId={i} getCount={getCount} getBurntCount={getBurntCount} yours={ownership[i]} />
               </div>
             ))}
         </div>
       </div>
-      <NumberTransfer contract={contract}/>
+      <NumberTransfer contract={contract} />
     </div>
   );
 }
 
-function NFTImage({ tokenId, getCount }) {
-  const contentId = 'Qmdh2FRkhHKMnxSkg3MqLWeZFz1XZbZY795gm4CRwoswLc';
-  // const metadataURI = `${contentId}/${tokenId}.txt`;
+function NFTImage({ tokenId, getCount, getBurntCount, yours }) {
+  const contentId = 'Qmdh2FRkhHKMnxSkg3MqLWeZFz1XZbZY795gm4CRwoswLc'; // be sure to update this if your ipfs address is different
   const imageURI = `https://gateway.pinata.cloud/ipfs/${contentId}/${tokenId}.txt`;
-  const metadataURI = `https://gateway.pinata.cloud/ipfs/${contentId}/${tokenId}.txt`; //imageURI;
-  // const imageURI = `D:\\Fireship\\web3-nft-dapp-tutorial\\img\\${tokenId}.txt`;
+  const metadataURI = `https://gateway.pinata.cloud/ipfs/${contentId}/${tokenId}.txt`;
 
   const [isMinted, setIsMinted] = useState(false);
   useEffect(() => {
@@ -106,12 +158,12 @@ function NFTImage({ tokenId, getCount }) {
     setIsMinted(result);
   };
 
+
+
   const mintToken = async () => {
     const connection = contract.connect(signer);
-    // const addr = connection.address;
-    const [addr] = await window.ethereum.request({ method: 'eth_requestAccounts' });
-    console.log(addr);
-    const result = await contract.payToMint(addr, metadataURI, {
+    const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const result = await contract.payToMint(account, metadataURI, {
       value: ethers.utils.parseEther('0.05'),
     });
 
@@ -124,47 +176,48 @@ function NFTImage({ tokenId, getCount }) {
     const uri = await contract.tokenURI(tokenId);
     alert(uri);
   }
-
-  const [text, setText] = useState('');
-  useEffect(() => {
-    async function fetchTextFile() {
-      try {
-        const response = await fetch(imageURI);
-        const content = await response.text();
-        // return content
-        setText(content);
-      } catch (error) {
-        console.error('Error fetching text file:', error);
-        setText("content");
-      }
-    }
-
-    fetchTextFile();
-  }, []);
-
   const [isBurnt, setIsBurnt] = useState(false);
   useEffect(() => {
     getBurntStatus();
   }, [isBurnt]);
 
+  const [text, setText] = useState('');
+  useEffect(() => {
+    async function fetchTextFile() {
+      if (isBurnt) {
+        setText("BURNT")
+      }
+      else if (yours) {
+        try {
+          const response = await fetch(imageURI);
+          const content = await response.text();
+          setText(content);
+        } catch (error) {
+          console.error('Error fetching text file:', error);
+          setText("content");
+        }
+      } else {
+        setText("Not Visible to You");
+      }
+    }
+    fetchTextFile();
+  }, [yours, isBurnt, isMinted]);
+
+
+
   const getBurntStatus = async () => {
     const result = await contract.isContentBurned(metadataURI);
-    console.log(result);
-    // console.log(contract.ownerOf(tokenId.toString()));
     setIsBurnt(result);
   };
 
   const burnToken = async () => {
-    // console.log(addr);
-    // console.log();
-    const tru_owner =  await contract.ownerOf(tokenId)
     const result = await contract.payToBurn(metadataURI, tokenId, {
       value: ethers.utils.parseEther('0.05'),
     });
 
     await result.wait();
     getBurntStatus();
-    // getCount();
+    getBurntCount();
   };
 
 
@@ -179,7 +232,7 @@ function NFTImage({ tokenId, getCount }) {
           </button>
         ) : (
           <button className="btn btn-secondary" onClick={getURI}>
-            Show URL 
+            Show URL
           </button>
         )}
 
@@ -188,8 +241,8 @@ function NFTImage({ tokenId, getCount }) {
             Burn
           </button>
         ) : (
-          <button className="btn btn-secondary" disabled>
-            Burn 
+          <button className="btn btn-primary" disabled>
+            Burn
           </button>
         )}
       </div>

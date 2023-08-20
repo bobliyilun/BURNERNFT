@@ -20,6 +20,8 @@ function NumberTransfer({contract}) {
     // };
     const handleLogValues = async () => {
         await contract.transferNFT(input2, input1);
+        setInput1('');
+        setInput2('');
     };
   
     return (

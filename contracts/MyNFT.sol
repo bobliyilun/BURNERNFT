@@ -16,6 +16,7 @@ contract FiredGuys is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     mapping(string => uint8) existingURIs;
     mapping(string => uint8) burnedURIs;
+    mapping(uint256 => uint8) burnedIDs;
 
     constructor() ERC721("FiredGuys", "FYR") {}
 
@@ -51,6 +52,10 @@ contract FiredGuys is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
     function isContentBurned(string memory uri) public view returns (bool) {
         return burnedURIs[uri] == 1;
+    }
+
+    function isTokenBurned(uint256 tokenID) public view returns (bool) {
+        return burnedIDs[tokenID] == 1;
     }
 
     function payToMint(
@@ -94,6 +99,7 @@ contract FiredGuys is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
 
         // require(compare(tokenURI(tokenId), metadataURI), "need to match");
         burnedURIs[metadataURI] = 1;
+        burnedIDs[tokenId] = 1;
         _burnedNumberCounter.increment();
 
         _burn(tokenId);
