@@ -34,6 +34,7 @@ It generates phone numbers with Toronto area codes, and it ensures uniqueness in
 
 ```bash
 git clone <this-repo>
+cd into it
 npm install
 
 # terminal 1
