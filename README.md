@@ -5,9 +5,20 @@ This Dapp starts from a seed dapp by Fireship.
 - See the seed version in action in the [Web3 NFT Tutorial](https://youtu.be/meTpMP0J5E8) on YouTube.
 - Follow the full [Web3 Tutorial](https://fireship.io/lessons/web3-solidity-hardhat-react-tutorial) on Fireship.
 
-If you started from a seed DApp,
-list the additions or changes you made (very important)
-to the original DApp's front-end rendering and back-end programming.
+The changes Made:
+On the smart contract:
+Made the NFT burnable
+Made the NFT transferable 
+
+On the Frontend:
+Allow individual users to mint their own burner phone numbers to their own metamask addresses.
+The original version mint the NFT at where the contract is deployed. 
+Allows the users to export all the numbers they own and up and running (not burnt) to a text file.
+This is done by fetching each IPFS URL. 
+
+Enforce a privacy filter. Due to the simplicity of the original frontend, all users share the smae web page when minting NFTs.
+This is not eaxctly secure as one may not want others to see their 
+
 
 The demo contains a basic web3 app and smart contract for minting NFTs.
 
