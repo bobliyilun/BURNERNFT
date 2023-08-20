@@ -8,6 +8,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract FiredGuys is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
+    function supportsInterface(bytes4 interfaceId) public view virtual override(ERC721, ERC721URIStorage) returns (bool) {
+        return super.supportsInterface(interfaceId);
+    }
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
