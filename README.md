@@ -7,13 +7,13 @@ This Dapp starts from a seed dapp by Fireship: https://www.youtube.com/channel/U
 
 The changes Made:
 
-On the smart contract:
+On the smart contract (direct changes to contracts/MyNFT.sol):
 
 Made the NFT burnable
 
 Made the NFT transferable 
 
-On React components:
+On React components (src/comonents/Home.jsx, and new .jsx files in components):
 
 Allow individual users to mint their own burner phone numbers to their own metamask addresses.
 The original version mint the NFT at where the contract is deployed. 
