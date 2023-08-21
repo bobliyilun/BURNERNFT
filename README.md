@@ -28,7 +28,7 @@ All numbers are not visible, not burnale, and not transferable by no one but the
 
 On pure frontend and NFT generation:
 
-Original Dapp was designed for pictures. Needed to conver text for this application. 
+Original Dapp was designed for pictures. Needed to convert text for this application. 
 
 Fireship did not include how his NFT was generated. However, I made my own burner phone number generator in python.
 It generates phone numbers with Toronto area codes, and it ensures uniqueness in the generations as well. 
