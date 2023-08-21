@@ -92,7 +92,7 @@ function Home() {
         const owned = (actual_owner.toLowerCase() === wallet_curr.toLowerCase());
         return owned;
       }));
-      setownership(filter_invalid)
+      setownership(filter_invalid);
 
     }
     getalltokens();
